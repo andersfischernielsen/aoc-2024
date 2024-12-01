@@ -33,5 +33,31 @@ let difference (lists: list<int> * list<int>) =
 
     List.map calculate zipped |> List.sum
 
-let result = readInput "input.txt" |> sorted |> difference
-printfn "%i" result
+
+let occurrences (list: list<int>) =
+    list
+    |> Seq.groupBy id
+    |> Seq.map (fun (key, group) -> key, Seq.length group)
+    |> Map.ofSeq
+
+let multiplyIfPresent (map: Map<int, int>) l =
+    match map.TryFind(l) with
+    | Some e -> l * e
+    | None -> 0
+
+let occurence (lists: list<int> * list<int>) =
+    let mapped =
+        match lists with
+        | (_, right) -> occurrences right
+
+    let calculated =
+        match lists with
+        | (left, _) -> multiplyIfPresent mapped |> List.map <| left
+
+    List.sum calculated
+
+let input = readInput "input.txt" |> sorted
+let firstResult = input |> difference
+let secondResult = input |> occurence
+printfn "%i" firstResult
+printfn "%i" secondResult
