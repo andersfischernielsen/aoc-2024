@@ -2,6 +2,7 @@
 */obj/
 
 */.config/
+.config/
 
 *.user
 *.vs
