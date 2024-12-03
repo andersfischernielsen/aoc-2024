@@ -26,7 +26,8 @@ let multiply sequence =
 
 let input = readInput "input.txt"
 let sections = extractSections input
-let sectionResults = Seq.map (fun section -> section |> extractMul) sections
-let multiplied = Seq.map multiply sectionResults
+
+let multiplied = Seq.map (fun section -> section |> extractMul |> multiply) sections
+
 let result = multiplied |> Seq.fold (+) 0
 printfn "%i" result
