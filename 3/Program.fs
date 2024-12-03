@@ -15,19 +15,12 @@ let extractMul (input: string) =
 
 let extractSections (input: string) =
     let regex = Regex(@"^(.*?don't\(\))|do\(\)(.*?)(?:don't\(\)|$)")
+    regex.Matches(input) |> Seq.map (fun m -> m.Value)
 
-    regex.Matches(input)
-    |> Seq.cast<Match>
-    |> Seq.map (fun m -> m.Value)
-    |> List.ofSeq
-
-let multiply sequence =
-    sequence |> Seq.fold (fun acc (x, y) -> acc + x * y) 0
+let multiply = Seq.fold (fun acc (x, y) -> acc + x * y) 0
 
 let input = readInput "input.txt"
 let sections = extractSections input
-
 let multiplied = Seq.map (fun section -> section |> extractMul |> multiply) sections
-
 let result = multiplied |> Seq.fold (+) 0
 printfn "%i" result
