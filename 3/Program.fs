@@ -2,8 +2,7 @@
 open System.Text.RegularExpressions
 
 let readInput path =
-    let raw = File.ReadLines(path)
-    List.ofSeq raw |> String.concat ""
+    File.ReadLines(path) |> String.concat ""
 
 let extractMul (input: string) =
     let map (m: Match) =
@@ -19,8 +18,7 @@ let extractSections (input: string) =
 
 let multiply = Seq.fold (fun acc (x, y) -> acc + x * y) 0
 
-let input = readInput "input.txt"
-let sections = extractSections input
+let sections = readInput "input.txt" |> extractSections
 let multiplied = Seq.map (fun section -> section |> extractMul |> multiply) sections
 let result = multiplied |> Seq.fold (+) 0
 printfn "%i" result
