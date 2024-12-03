@@ -5,7 +5,6 @@ let readInput path =
     let raw = File.ReadLines(path)
     List.ofSeq raw |> String.concat ""
 
-
 let extractMul (input: string) =
     let map (m: Match) =
         let x, y = int m.Groups.[1].Value, int m.Groups.[2].Value
