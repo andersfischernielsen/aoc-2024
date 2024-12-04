@@ -5,17 +5,39 @@ let readInput path =
     |> Seq.map (fun s -> s.ToCharArray() |> Array.map string)
     |> array2D
 
+type Direction =
+    | North
+    | South
+    | East
+    | West
+    | Northeast
+    | Northwest
+    | Southeast
+    | Southwest
+
 type Path =
     { Positions: (int * int) list
-      Direction: (int * int) option }
+      Direction: Direction option }
 
-let findNeighbors (input: string[,]) (x, y) (target: string) direction =
+let toCoordinates direction =
+    match direction with
+    | North -> (-1, 0)
+    | South -> (1, 0)
+    | East -> (0, 1)
+    | West -> (0, -1)
+    | Northeast -> (-1, 1)
+    | Northwest -> (-1, -1)
+    | Southeast -> (1, 1)
+    | Southwest -> (1, -1)
+
+let findNeighbors (input: string[,]) (x, y) (target: string) (direction: Direction option) =
     let directions =
         match direction with
-        | None -> [ (-1, 0); (1, 0); (0, 1); (0, -1); (-1, 1); (-1, -1); (1, 1); (1, -1) ]
+        | None -> [ North; South; East; West; Northeast; Northwest; Southeast; Southwest ]
         | Some direction -> [ direction ]
 
-    let check (dx, dy) =
+    let check direction =
+        let dx, dy = toCoordinates direction
         let nx, ny = x + dx, y + dy
 
         let withinBounds =
@@ -50,9 +72,9 @@ let rec explore input paths targets =
 
                 findNeighbors input (x, y) target currentDirection
                 |> Seq.filter (fun ((nx, ny), _) -> not (visited.Contains(nx, ny)))
-                |> Seq.map (fun ((nx, ny), direction) ->
+                |> Seq.map (fun ((nx, ny), dir) ->
                     { Positions = (nx, ny) :: path.Positions
-                      Direction = direction }))
+                      Direction = Some dir }))
             |> Seq.cache
 
         explore input nextPaths nextTargets
@@ -85,5 +107,4 @@ let initial =
           Direction = None })
 
 let paths = explore input initial [ "M"; "A"; "S" ]
-printPaths paths input
 printfn "%i" <| Seq.length paths
