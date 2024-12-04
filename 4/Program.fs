@@ -98,13 +98,32 @@ let printPaths paths (input: string[,]) =
         printfn "%A\n" path.Direction.Value)
 
 let input = readInput "input.txt"
-let positions = positionsOf "X" input
+let xPositions = positionsOf "X" input
 
 let initial =
-    positions
+    xPositions
     |> Seq.map (fun pos ->
         { Positions = [ pos ]
           Direction = None })
 
 let paths = explore input initial [ "M"; "A"; "S" ]
 printfn "%i" <| Seq.length paths
+
+let hasCross (x, y) (input: string[,]) : bool =
+    let withinBounds =
+        x > 0 && y > 0 && x < input.GetLength(0) - 1 && y < input.GetLength(1) - 1
+
+    if withinBounds then
+        let mas1 = (input.[x - 1, y - 1] = "M" && input.[x + 1, y + 1] = "S")
+        let mas2 = (input.[x + 1, y - 1] = "M" && input.[x - 1, y + 1] = "S")
+
+        let sam1 = (input.[x - 1, y - 1] = "S" && input.[x + 1, y + 1] = "M")
+        let sam2 = (input.[x + 1, y - 1] = "S" && input.[x - 1, y + 1] = "M")
+
+        [ mas1; mas2; sam1; sam2 ] |> List.filter id |> List.length >= 2
+    else
+        false
+
+let aPositions = positionsOf "A" input
+let crosses = Seq.filter (fun e -> hasCross e input) aPositions
+printfn "%i" <| Seq.length crosses
