@@ -34,7 +34,7 @@ let findNeighbors (input: string[,]) (x, y) (target: string) (direction: Directi
     let directions =
         match direction with
         | None -> [ North; South; East; West; Northeast; Northwest; Southeast; Southwest ]
-        | Some dir -> [ dir ]
+        | Some direction -> [ direction ]
 
     let check direction =
         let dx, dy = toCoordinates direction
