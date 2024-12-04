@@ -50,7 +50,7 @@ let findNeighbors (input: string[,]) (x, y) (target: string) (direction: Directi
 
     Seq.choose check directions
 
-let positionsOf (input: string[,]) target =
+let positionsOf target (input: string[,]) =
     seq {
         for x in 0 .. input.GetLength(0) - 1 do
             for y in 0 .. input.GetLength(1) - 1 do
@@ -98,7 +98,7 @@ let printPaths paths (input: string[,]) =
         printfn "%A\n" path.Direction.Value)
 
 let input = readInput "input.txt"
-let positions = positionsOf input "X"
+let positions = positionsOf "X" input
 
 let initial =
     positions
