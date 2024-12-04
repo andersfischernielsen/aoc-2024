@@ -62,8 +62,8 @@ let positionsOf (input: string[,]) target =
 let rec explore input paths targets =
     match targets with
     | [] -> paths
-    | target :: restTargets ->
-        let newPaths =
+    | target :: nextTargets ->
+        let nextPaths =
             paths
             |> Seq.collect (fun path ->
                 let (x, y) = List.head path.Positions
@@ -77,10 +77,7 @@ let rec explore input paths targets =
                       Direction = Some dir }))
             |> Seq.cache
 
-        if Seq.isEmpty newPaths then
-            Seq.empty
-        else
-            explore input newPaths restTargets
+        explore input nextPaths nextTargets
 
 let printPaths paths (input: string[,]) =
     let printPath path =
